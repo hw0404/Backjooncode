@@ -1,71 +1,62 @@
+//분리집합
 #include<iostream>
-#include<cstring>
 #include<vector>
 #define MAX_N 201
 using namespace std;
+
+int parent[MAX_N];
+vector<int> v;
 int city,plan;
 
-//int visited[MAX_N][MAX_N];
-int visited[MAX_N];
-vector<int> dest;
-vector<int> graph[MAX_N];
+int getParent(int x){
+    if(parent[x]==x) return x;
+    else return parent[x]=getParent(parent[x]);
+}
 
-void dfs( int next ){
-    int cur = next;
-    for(int i=0;i<graph[cur].size();i++){
-        int next =graph[cur][i];
-        if(visited[next]==0){
-            visited[next]=1;
-            dfs(next);
-        }else{
-            continue;
-        }
-    }
+void Union(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+//    if(a>b)parent[a]=b;
+//    else parent[b]=a;
+     a>b ? parent[a]=b : parent[b]=a ;
     
 }
 void input(){
-    cin >> city >> plan;                    // city = 도시의 수 , plan = 여행계획에 속한 도시들의 수
-    for(int i=1;i<=city;i++){               // 1번도시부터 입력받은(city)의 수만큼 for문을 돌아
-        for(int j=1;j<=city;j++){           // 1번와 연결된 도시들을 입력받는다.
+    cin >> city >> plan ;
+    for(int i=1;i<=city;i++){        //자기 자신이 부모노드 연결전.
+        parent[i]=i;
+    }
+    for(int i=1;i<=city;i++){
+        for(int j=1;j<=city;j++){
             int input;
             cin >> input;
-            if( input ==1){
-                graph[i].push_back(j);
-                graph[j].push_back(i);
+            if(input ==1){
+                Union(i,j);
             }
-                                    //graph[i][j]= graph[j][i] 서로 연결된 도시를 저장
         }
     }
     for(int i=0;i<plan;i++){
-        int d;
-        cin >> d;
-        dest.push_back(d);                  //여행 계획을 넣어줌
+        int listCity;
+        cin >> listCity;
+        v.push_back(listCity);
     }
 }
-
 void solve(){
-    bool stop = false;
-    visited[dest[0]]=1;
-    dfs(dest[0]);
-    for(int i=0;i<dest.size();i++){
-        if(visited[dest[i]]==0){
-            stop=true;
+    bool stop =false;
+    for(int i=0;i<plan-1;i++){
+        if(parent[v[i]]!=parent[v[i+1]]){
+            stop = true;
             break;
         }
     }
-    cout << (stop ? "NO" : "YES");
-
+    cout<< (stop ? "NO\n" : "YES\n") ;
 }
-
 void solution(){
     input();
     solve();
 }
 int main(){
     solution();
-
     return 0;
 }
-
-
 
