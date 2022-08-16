@@ -27,65 +27,40 @@ void input(){
 struct com
 {
     bool operator()( loc m1, loc m2){
-        return m1.cost <m2.cost;
+        return m1.cost > m2.cost;
     }
 };
 void solve(){
-    int arr[N+1];
+    int d[N+1];
     for(int i=0;i<=N;i++){
-        arr[i]=inf;
+        d[i]=inf;
     }
-    arr[start]=0;
+    d[start]=0;
     priority_queue<loc,vector<loc>,com> pq;
     pq.push({start,0});
     while(!pq.empty()){
-        int cur = pq.top().next;
-        int distance = -pq.top().cost;
+        int current = pq.top().next;
+        int curCost = pq.top().cost;
         pq.pop();
-        if(arr[cur]<distance) continue;
-        for(int i=0;i<v[cur].size();i++){
-            int next = v[cur][i].next;
-            int cost = v[cur][i].cost + distance;
-            if(cost<arr[next]){
-                arr[next]=cost;
-                pq.push({next,-cost});
+        if(d[current]<curCost) continue;
+        for(int i=0;i<v[current].size();i++){
+            int nextNode = v[current][i].next;
+            int nextCost = v[current][i].cost;
+            if( nextCost + curCost < d[nextNode]){
+                d[nextNode] = nextCost+ curCost;
+                pq.push({nextNode,nextCost+curCost});
             }
         }
     }
+  
+
+        
     for(int i=1;i<=N;i++){
-        if(arr[i]==inf) cout<<"INF\n";
-        else cout<<arr[i]<<"\n";
+        if(d[i]==inf) cout<<"INF\n";
+        else cout<<d[i]<<"\n";
         
     }
-        
-//    int arr[N+1];
-//    for(int i=0;i<N+1;i++){
-//        arr[i]=inf;
-//    }
-//    arr[start]=0;
-//
-//    for(int i=0;i<v[start].size();i++){
-//        int next = v[start][i].next;
-//        int cost = v[start][i].cost;
-//        arr[next]=cost;
-//    }
-//    for(int i=1;i<=N;i++){
-//        if(i==start){
-//            continue;
-//        }else{
-//            for(int j=0;j<v[i].size();j++){
-//                int next = v[i][j].next;
-//                int cost = v[i][j].cost;
-//                if(next == start) continue;
-//                if( arr[i]+cost<arr[next]) arr[next]=arr[i]+cost;
-//            }
-//        }
-//    }
-//
-//    for(int i=1;i<=N;i++){
-//        if(arr[i]==10000) cout<<"INF\n";
-//        else  cout<<arr[i]<<"\n";
-//    }
+    
 }
 void solution(){
     input();
