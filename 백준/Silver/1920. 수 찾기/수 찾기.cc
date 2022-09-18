@@ -1,32 +1,39 @@
 #include<iostream>
-#include<map>
-
+#include<vector>
+#include<algorithm>
 using namespace std;
-map<int,int> m;
 
-void input(){
-    int N,M;
-    cin >> N;
-    for(int i=0;i<N;i++){
-        int input;
-        cin >> input;
-        m.insert({input,input});
-    }
-    cin >>M;
-    for(int i=0;i<M;i++){
-        int input;
-        cin >> input;
-        if(m.find(input)!=m.end()) cout<<"1\n";
-        else cout<<"0\n";
-    }
+#define MAX_N 100000
+
+int arr[MAX_N];
+int A,B;
+vector<int> v;
+int search(int start,int end, int target){
+    if(start>end) return 0;
+    int mid = (start+end)/2;
+    if(arr[mid]==target) return 1;
+    else if(arr[mid]>target) return search(start,mid-1,target);//target이 더 작을 때
+        else return search(mid+1,end,target);
 }
-void solution(){
-    input();
-}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-    solution();
+    cin >> A;
+    for(int i=0;i<A;i++){
+        cin >> arr[i];
+    }
+    sort(arr,arr+A);                // sort 기본이 quick 정렬 O(nlog(n))
+    cin >> B;
+    for(int i=0;i<B;i++){
+        int input;
+        cin >> input;
+        v.push_back(input);
+    }
+
+    for(int i=0;i<B;i++){               //2분탐색 O(logn)
+        cout<<search(0,A-1,v[i])<<"\n";
+    }
     return 0;
 }
